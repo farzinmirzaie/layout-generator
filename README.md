@@ -14,4 +14,4 @@ user types a valid value, the layout will change in real-time. The inputs can be
 
 ## Examples
 
-<img src="./examples.png">
+![image](./examples.png)
