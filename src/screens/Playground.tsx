@@ -1,22 +1,37 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { validators, helpers } from "../utils";
-import { Input } from "../components";
+import { Input, LayoutGenerator } from "../components";
 
 const Playground = () => {
-  const [input, setInput] = useState<string>("");
+  const [structure, setStructure] = useState<string>("");
+  const [data, setData] = useState<number[]>([]);
 
-  const isValid = (input: string): boolean =>
-    validators.isValid(helpers.removeSpaces(input));
+  const isValid = (value: string): boolean =>
+    validators.isValid(helpers.removeSpaces(value));
+
+  useEffect(() => {
+    if (isValid(structure)) {
+      setData(
+        structure
+          .split("/")
+          .filter((num) => num !== "")
+          .map((num) => Number(num))
+          .filter((num) => num > 0)
+      );
+    } else {
+      setData([]);
+    }
+  }, [structure]);
 
   return (
     <View style={styles.container}>
-      <Input value={input} onChangeText={(text) => setInput(text)} />
-      <View style={styles.container}>
-        <Text style={{ color: isValid(input) ? "green" : "red" }}>
-          {`Input is ${isValid(input) ? "valid" : "invalid"}`}
-        </Text>
-      </View>
+      <Input
+        placeholder="ex: 1/2/3/4"
+        value={structure}
+        onChangeText={(text) => setStructure(text)}
+      />
+      <LayoutGenerator data={data} />
     </View>
   );
 };
